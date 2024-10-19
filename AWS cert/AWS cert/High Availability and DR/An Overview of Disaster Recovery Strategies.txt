@@ -1,0 +1,148 @@
+Okay, hello cloud gurus
+and welcome to this lecture.
+In this lecture we're doing an overview
+of disaster recovery strategies.
+So the first thing we're gonna look at is
+what our recovery point objective is.
+We're then gonna look at
+what our recovery time objective is,
+and your RPOs and RTOs basically determine
+what your disaster recovery strategy is going to be.
+So we're gonna look at the four different types.
+We're gonna look at backup and restore.
+We're gonna look at pilot light,
+we're gonna look at warm standby,
+and then we're gonna look at active active failover.
+And then we'll go on to my exam tips.
+So let's start with our RPO.
+RPO stands for recovery point objective.
+And in the event of a disaster or failure,
+at what point in time do you want your data recovered to?
+Basically put simply, how much data can you afford to lose?
+Can you afford to lose 24 hours?
+Can you afford to lose 12 hours?
+Can you only afford to lose a few minutes or a few seconds
+or can you not afford to lose any data at all?
+So typically speaking, the lower the time,
+the greater the cost.
+So the lower your RPO, the greater the cost is to you.
+So if you can only afford to lose milliseconds
+or seconds of data, it's gonna cost you a lot more.
+Whereas if it's like a static webpage, for example,
+that doesn't change very much,
+maybe you can afford to lose 24 hours of data.
+It's completely up to you and your business needs.
+Moving on to recovery time objective or RTO.
+So this is in the event of a failure.
+How fast do you want to fail over?
+So how much time can the business afford
+and the lower the time, the more expensive the cost.
+So this basically means how long can your website be down?
+If it's a non-critical website,
+can it be down for a couple of days?
+But if it's a critical website,
+like your production web servers
+that generate all your revenue,
+how long can you afford to have that site down?
+Can the business only afford a couple of hours,
+a couple of minutes, a couple of seconds, et cetera.
+So the lower the time, the more expensive the cost.
+So now that we understand RTO and RPO,
+we're gonna move on to backup and restore.
+And this is the simplest disaster recovery strategy.
+Basically, if something happens to your production system,
+you restore that system from backup.
+So let's say we've got our EC2 instance
+and it goes offline.
+We've got a snapshot of that EC2 instance.
+So we can basically just restore from a snapshot
+and basically recreate our EC2 instance.
+So that's just the backup and restore strategy.
+Moving on to something a little bit more complicated
+is the pilot light scenario.
+So pilot light in a home hot water system is
+where a small light burns
+so that when you want to turn the hot water system on,
+it starts straight away.
+You don't need to ignite any flames.
+So when a pilot light is burning,
+it's not consuming the same level of gas
+as to when the system is on.
+So how does this work with EC2 and with Amazon?
+Well, think of this scenario.
+So you've got US-east-1, you've got a VPC in there,
+you've got three web servers and one database server.
+And that database server is doing live replication
+to another database server in US-West-1
+but there's no web servers.
+So essentially this scenario over here off to your right,
+is the pilot light.
+The pilot light is going, you've got all your data
+being transmitted, but you don't have any web servers.
+Now if we suddenly lose a region, what do we do?
+Well then we just basically provision our three web servers
+in front of that database server and then we can fail over.
+So we're lighting the flames,
+we're lighting up the web servers,
+and essentially we are restoring that way.
+So that's all a pilot light scenario is.
+The next scenario we've got is a warm standby.
+And this is where you have a scaled down version
+of your production system
+already running in another availability zone or region.
+And then you scale this system up in the event of an outage.
+So very similar to the pilot light,
+but just a bit more scaled up.
+So we've got us east one, we've got our three web servers
+and our database server.
+And then we've got live application
+of our database server over to US-West-1
+but we also have a web server.
+So we've got a warm standby ready to go.
+Then if we lose our US-East-1, we lose that region,
+well we've still got US-west-1 and we just scale up
+and we add additional web servers
+so it can basically deal with the traffic.
+So that's all a warm standby is.
+We then have the final one,
+which is our active/active failover.
+And this is the most expensive disaster recovery strategy.
+And it's where you have two sites,
+both active and traffic is split between the two.
+And if one site fails, then the other site takes the load.
+And generally, you have to have both sites
+at 200% normal capacity to avoid downtime.
+So let's have a look at how this works.
+So we've got our two VPCs one's in US-East-1,
+one's in US-West-1
+One got our three web servers in each of them.
+And we've got our database servers in each of them.
+And it's a mirrored environment and both are active.
+And then if we lose one of our regions,
+we automatically fail our traffic over to US-West-1,
+which has the resources in there to cope with that load.
+So going on to my exam tips with RPO and RTO,
+you need to know the difference between them.
+So RPO is at what point in time
+do you want your environment recovered to?
+So it's your recovery point objective.
+And our RTO is how quickly
+you need to recover your environment.
+So how much downtime can the business handle?
+This is our recovery time objective.
+And then you just need to remember
+the four different disaster recovery strategies.
+So we had backup on restore,
+this is the cheapest, but usually the slowest option.
+Got pilot light. This is faster than our backup and restore,
+but you still have some downtime.
+We then have warm standby.
+This is quicker recovery time than pilot light,
+but slightly more expensive.
+And then finally, we've got our active/active failover.
+And this is the most expensive option,
+but there's no downtime and it has our lowest RTO and RPO.
+So that is it for this lecture, everyone.
+If you have any questions, please let me know.
+If not, feel free to move on to the next lecture.
+Thank you!

@@ -1,0 +1,563 @@
+Start the services in home directory
+
+start-master.sh
+start-slaves.sh
+
+JPS
+
+then spark-shell execute
+
+----------------------------
+
+val input = Array(1, 2, 3, 4, 5)
+val output = sc.parallelize(input,4)
+output.getNumPartitions
+output.collect()    // To display output on the console
+
+
+val LocalFSRdd = sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat") # URL of the local FS  
+LocalFSRdd.count()  # count() is an action, counts the number of records.
+
+val HDFSRdd = sc.textFile("hdfs://192.168.56.70:9000/Demo/stud.tsv") // URL of the HDFS path.
+HDFSRdd.count()
+
+
+val LocalFSRdd = sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat") # URL of the local FS  
+LocalFSRdd.take(5).foreach(println)
+
+
+val LocalFSRdd = sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat") # URL of the local FS  
+LocalFSRdd.collect()
+------------------------------------------
+
+
+23/03/23 06:14:33 WARN TaskSchedulerImpl: Initial job has not accepted any resources; check your cluster UI to ensure that workers are registered and have sufficient resources
+
+
+PySpark Demos:
+
+web=sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+for i in web.collect():
+	print(i)
+
+
+web=sc.textFile("hdfs://192.168.56.70:9000/Demo/stud.tsv")
+for i in web.collect():
+	print(i)
+
+
+web=sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+web.count()
+
+
+web=sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+for i in web.take(2):
+	print(i)
+------------------------------------------------------------
+
+Scala:Map
+
+val rdd = sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+val split = rdd.map(line => line.split("\t"))
+val result = split.map(field => (field(0),field(4),field(6)))
+result.take(5).foreach(println)  
+
+PySpark:
+
+web=sc.textFile("hdfs://192.168.56.70:9000/Demo/stud.tsv")
+fields=web.map(lambda x:x.split("\t"))
+rdd=fields.map(lambda x:(x[0],x[2]))
+for i in rdd.take(10):
+	print(i)
+
+
+web=sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+fields=web.map(lambda x:x.split("\t"))
+rdd=fields.map(lambda x:(x[0],x[2]))
+for i in rdd.take(10):
+	print(i)
+
+----------------------------------------
+
+
+Scala: Filter
+
+val rdd = sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+val filtered = rdd.filter(line => line.split("\t")(0).equals(("12/02/2016")))
+val split = filtered.map(line => line.split("\t"))
+val result = split.map(field => (field(0),field(4),field(6)))
+result.take(5).foreach(println)  
+
+
+val rdd = sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+val filtered = rdd.filter(line => line.split("\t")(8).equals(("windows")))
+val split = filtered.map(line => line.split("\t"))
+val result = split.map(field => (field(0),field(4),field(8)))
+result.take(5).foreach(println)  
+
+----------------------------------------------------------
+
+Input:
+
+vagrant@master:~$ cat > demo
+I am in hdfs path
+creating demo file using put command
+fetch the data using get command
+create a directory and and dump the file
+
+ctrl+C to come out of editing mode
+
+verify the output : cat demo
+
+
+Output:
+
+I AM IN HDFS PATH
+CREATING DEMO FILE USING PUT COMMAND
+FETCH THE DATA USING GET COMMAND
+CREATE A DIRECTORY AND AND DUMP THE FILE
+
+
+rdd=sc.textFile("file:///home/vagrant/demo")
+rdd_uc=rdd.map(lambda x:x.upper())
+for i in rdd_uc.collect():
+	print(i)
+
+--------------------------------------------------
+
+web=sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+fields=web.map(lambda x:x.split("\t"))
+filtered=fields.filter(lambda x:x[0]=="12/02/2016")
+rdd_result=filtered.map(lambda x:(x[0],x[4],x[6]))
+for i in rdd_result.take(10):
+	print(i)
+
+------------------------------------------------
+
+
+rdd=sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_IpLookup.txt")
+fields=rdd.map(lambda x:x.split(","))
+rdd=fields.map(lambda x:(x[1],x[0]))
+grped_rdd=rdd.groupByKey().mapValues(list)
+for i in grped_rdd.take(10):
+	print(i)
+
+
+----------------------------------------------------
+
+
+Scala:groupBy
+
+val rdd = sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_IpLookup.txt")
+val split = rdd.map(line => line.split(","))
+val result = split.map(field => (field(1),field(0)))
+result.groupByKey.take(10).foreach(print)
+
+PySpark:
+
+df = spark.createDataFrame([
+    ['red', 'banana', 1, 10], ['blue', 'banana', 2, 20], ['red', 'carrot', 3, 30],
+    ['blue', 'grape', 4, 40], ['red', 'carrot', 5, 50], ['black', 'carrot', 6, 60],
+    ['red', 'banana', 7, 70], ['red', 'grape', 8, 80]], schema=['color', 'fruit', 'v1', 'v2'])
+df.show()
+df.groupby('color').avg().show()
+
+
+-------------------------------------------------
+Scala:reduceByKey
+
+val rdd = sc.textFile("/home/vagrant/dataset/goShopping_WebClicks.dat")
+val split = rdd.map(line => line.split("\t"))
+val result = split.map(field => (field(4),field(6).toInt)). reduceByKey((v1,v2) => v1 + v2)
+result.take(5).foreach(println)
+
+PySpark:
+
+web=sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+fields=web.map(lambda x:x.split("\t"))
+rdd=fields.map(lambda x:(x[4],int(x[6])))
+result=rdd.reduceByKey(lambda x,y:x+y)
+for i in result.take(10):
+	print(i)
+----------------------------------------------------
+Scala:
+
+val rdd = sc.textFile("/home/vagrant/dataset/goShopping_WebClicks.dat")
+import org.apache.spark.storage.StorageLevel
+rdd.persist(StorageLevel.MEMORY_ONLY)
+
+PySpark:
+
+from pyspark import *
+rdd = sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+rdd.persist(StorageLevel.MEMORY_AND_DISK)
+rdd.getStorageLevel()
+print(rdd.getStorageLevel())
+
+---------------------------------------------------------
+
+Two types of variables:
+
+1) Accumulators - mainly for aggregation, consolidated output comes from various worker nodes(executors)
+
+2) Broadcast - Each executor will have these variables stored in cache and distributed across, no consolidation rather 
+individual output comes from each worker nodes
+
+
+
+--------------------------------------------------------
+
+Accumulator:
+
+Scala:
+
+val blankLines = sc.accumulator(0)	
+sc.textFile("/home/vagrant/dataset/goShopping_IpLookup.txt").foreach{line =>if (line.length() == 0) blankLines += 1}
+println("Blank lines: " + blankLines)
+
+PySpark:
+
+def Blank_lines(line):
+if(len(line) != 0):
+	blankLines.add(1)
+
+blankLines = sc.accumulator(0)	
+sc.textFile("hdfs://192.168.56.70:9000/Demo/stud.tsv").foreach(lambda x:Blank_lines(x))
+print(blankLines.value)
+
+
+
+def Blank_lines_1(line):
+if(len(line) == 0):
+	blankLines.add(1)
+
+blankLines = sc.accumulator(0)	
+sc.textFile("hdfs://192.168.56.70:9000/Demo/stud.tsv").foreach(lambda x:Blank_lines_1(x))
+print(blankLines.value)
+1001    John    45.0
+1002    James   85.0
+1003    John    45.0
+1004    James   85.0
+1005    Smith   60.0
+1006    Scott   70.0
+1007    Shoba   80.0
+1008    Taanu   90.0
+1009    Anbu    95.0
+1010    Aruna   85.0
+
+
+
+-----------------------------------------------------------
+
+Broadcast:
+
+Scala:
+
+val accVisit = sc.broadcast("AccidentVisit")
+val purVisit = sc.broadcast("PurposeVisit")
+val rdd = sc.textFile("/home/vagrant/data/goShopping_WebClicks.dat",2)
+val split = rdd.map(line => line.split("\t"))
+val result = split.map(field => (field(4),if(field(6).toInt>=60){accVisit.value}else{purVisit.value}))
+result.take(3).foreach(println)
+
+
+
+PySpark:
+
+
+def time_spent(x):
+if( x < 60):
+	return accVisit.value
+else:
+	return purVisit.value
+
+accVisit = sc.broadcast("AccidentVisit")
+purVisit = sc.broadcast("PurposeVisit")
+rdd = sc.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+fields=rdd.map(lambda x:x.split("\t"))
+rdd_res=fields.map(lambda x:(x[4],x[6],time_spent(int(x[6]))))
+for i in rdd_res.take(10):
+	print(i)
+
+--------------------------------------------------
+
+from pyspark.sql.types import StructType, StructField, StringType
+
+fields = [StructField("date", StringType(), True),StructField("time", StringType(), True),StructField("hostIp", StringType(), True),StructField("csmethod", StringType(), True),StructField("url", StringType(), True),StructField("timespent", StringType(), True),StructField("redirectedFrom", StringType(), True),StructField("deviceType", StringType(), True)]
+
+schema = StructType(fields)
+webClicksDF = spark.read.schema(schema).option("delimiter","\t").csv("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat")
+
+webClicksDF.createOrReplaceTempView("shopping")  #Create temporary view
+sqlDF = spark.sql("SELECT * FROM shopping limit 5")
+sqlDF.show()
+
+
+webClicksDF.show()
+
+
+-----------------------------------------------
+
+{"empno":1001,"empname":"John","designation":"TL"}
+{"empno":1002,"empname":"James","designation":"SSE"}
+{"empno":1003,"empname":"Smith","designation":"AM"}
+{"empno":1004,"empname":"Scott","designation":"SE"}
+{"empno":1005,"empname":"Joshi","designation":"TL"}
+{"empno":1006,"empname":"Jack","designation":"SSE"}
+
+
+
+df = spark.read.json("file:///home/vagrant/dataset/Dataset/emp.json")
+df.show()
+
+df.select("empname").show()
+
+df.select(df["empname"], df["empno"] + 1).show()
+
+
+df.filter(df["empno"]> 1003).show()
+
+df.groupBy("empname").count().show()
+
+df.groupBy("designation").count().show()
+
+
+df = spark.read.json("file:///home/vagrant/dataset/Dataset/emp.json")
+df.createOrReplaceTempView("employee")  #Create temporary view
+sqlDF = spark.sql("SELECT * FROM employee")
+sqlDF.show()
+
+
+-----------------------------------------------------------------
+Converting an existing RDD to DataFrame: PySpark
+
+schema= ["date","time","hostIp","csmethod","customerip","url","timespent","redirectedFrom","deviceType" ]
+
+webclicksrdd = spark.sparkContext.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat").map(lambda x:x.split("\t")).map(lambda attributes : ( attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8]))
+
+webclicksDF = spark.createDataFrame(webclicksrdd, schema)
+
+webclicksDF.createOrReplaceTempView("clicks")
+
+ClicksDF = spark.sql("SELECT * from clicks limit 5")
+
+ClicksDF.show()
+
+-------------------------------------------------------
+
+
+
+
+Complie time error is not given for salary, but during runtime you get the error
+
+
+dataframe = spark.read.json("file:///home/vagrant/dataset/Dataset/emp.json") 
+dataframe.filter("salary > 10000").show
+
+
+
+--------------------------------------------
+
+
+Spark API Datasets: Execute in spark-shell
+Converting DatasetAPI to RDD:
+
+
+case class Clicks(date: String, time: String, hostIp:String, csmethod:String,customerip:String, url:String,timespent:String,redirectedFrom:String,deviceType:String)
+
+val webclicksDS = spark.sparkContext.textFile("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat").map(_.split("\t")).map(attributes => Clicks(attributes(0),attributes(1),attributes(2),attributes(3),attributes(4),attributes(5),attributes(6),attributes(7),attributes(8))).toDF()
+
+webclicksDS.take(5).foreach(println) // Apply RDD operations
+
+
+------------------------------------------------
+Converting DatasetAPI to DataFrames:
+
+import org.apache.spark.sql.types._;
+
+val date=StructField("date",DataTypes.StringType)
+val time=StructField("time",DataTypes.StringType)
+val hostIp=StructField("hostIp",DataTypes.StringType)
+val csmethod=StructField("csmethod",DataTypes.StringType)
+val customerip=StructField("customerip",DataTypes.StringType)
+val url=StructField("url",DataTypes.StringType)
+val timespent=StructField("timespent",DataTypes.StringType)
+val redirectedFrom=StructField("redirectedFrom",DataTypes.StringType)
+val deviceType=StructField("deviceType",DataTypes.StringType)
+
+val fields = Array(date,time,hostIp,csmethod,customerip,url,timespent,redirectedFrom,deviceType)
+val schema = StructType(fields)
+
+case class Clicks(date: String, time: String, hostIp:String, csmethod:String,customerip:String, url:String,timespent:String,redirectedFrom:String,deviceType:String)
+
+
+val webClicksDs= spark.read.schema(schema).option("delimiter", "\t").csv("file:///home/vagrant/dataset/Dataset/goShopping_WebClicks.dat").as[Clicks]
+
+webClicksDs.createOrReplaceTempView("clicks")
+
+val results = spark.sql("SELECT * FROM clicks limit 5")
+
+results.show()
+
+Transformations:
+
+val results = webClicksDs. filter($"timespent"< "100")
+
+results.show()
+
+
+Transformations:
+
+val results = webClicksDs. map(_.customerip)
+
+results.show()
+
+----------------------------------------------
+
+Create a file in pwd : using VI editor - filename:UserTimeSpent.py
+
+
+
+from pyspark import SparkContext
+import sys
+
+if __name__ == "__main__":
+    
+    sc = SparkContext(appName="UserTimeSpent")
+    args = sys.argv
+      
+    inputFileName = args[1]     # inputfilename is at 1st index in argv
+   
+    outputFileName = args[2]   # outputfilename is at 2st index in argv
+
+    web=sc.textFile("file://" +  inputFileName)   # Reading file from LocalFS
+    fields=web.map(lambda x:x.split("\t"))
+    rdd=fields.map(lambda x:(x[4],int(x[6])))
+    result=rdd.reduceByKey(lambda x,y:x+y)
+    result.saveAsTextFile("file://" +  outputFileName)   # Writingd file to LocalFS
+
+
+
+
+
+
+Code :/home/vagrant/UserTimeSpent.py
+
+Input File: /home/vagrant/dataset/Dataset/goShopping_WebClicks.dat
+
+Output File: /home/vagrant/dataset/Dataset/UserTimeSpentOut
+
+
+
+spark-submit --master spark://master:7077 --deploy-mode client /home/vagrant/UserTimeSpent.py /home/vagrant/dataset/Dataset/goShopping_WebClicks.dat /home/vagrant/dataset/Dataset/UserTimeSpentOut
+
+Participants working in AWS instance: 
+
+spark-submit --master spark://localhost:7077 --deploy-mode client /home/vagrant/UserTimeSpent.py /home/vagrant/dataset/Dataset/goShopping_WebClicks.dat /home/vagrant/dataset/Dataset/UserTimeSpentOut
+
+-------------------------------------------------------------------------------------------------------------
+
+Spark Streaming Code:stream_wordcount.py 
+
+import sys
+from pyspark import SparkContext
+from pyspark.streaming import StreamingContext
+
+if __name__ == "__main__":
+    
+    sc = SparkContext(appName="PythonStreamingNetworkWordCount")
+    ssc = StreamingContext(sc,15)
+
+    Dstream1 = ssc.socketTextStream("192.168.56.70",9999)
+    counts = Dstream1.flatMap(lambda line: line.split(" "))\
+                  .map(lambda word: (word, 1))\
+                  .reduceByKey(lambda a, b: a + b)
+    counts.pprint()
+
+    ssc.start()
+    ssc.awaitTermination()
+
+
+
+
+spark-submit --master spark://master:7077 --deploy-mode client /home/vagrant/stream_wordcount.py 
+
+
+AWS Instance:
+
+spark-submit --master spark://localhost:7077 --deploy-mode client /home/vagrant/stream_wordcount.py 
+
+In another window:
+
+nc -lk 9999
+
+
+
+----------------------------------------------------------------
+
+Structured Streaming Code:Batch wise data gets counted
+
+Execute both the codes in pyspark REPL instead of .py, parallely exceute in another terminal : nc -lk 9999 , to provide the input
+
+
+
+from pyspark.sql.functions import explode
+from pyspark.sql.functions import split
+
+spark = SparkSession.builder.appName("StructuredNetworkWordCount").getOrCreate()
+	
+# Create DataFrame representing the stream of input lines from connection to localhost:9999
+
+lines = spark.readStream.format("socket").option("host", "192.168.56.70").option("port", 9999).load()   # Streaming DataFrame[value: string]
+
+# Split the lines into words
+
+words = lines.select(
+   explode(
+       split(lines.value, " ")
+   ).alias("word")
+)
+
+# Generate running word count
+
+wordCounts = words.groupBy("word").count()
+
+
+# Start running the query that prints the running counts to the console
+
+wordCounts.writeStream.outputMode("complete").option("checkpointLocation", "file:///home/vagrant/checkdir").format("console").start()
+
+-------------------------------------------------------------------------------------------------------------------
+
+WordCount by Window: 
+window length - The duration of the window- 30 seconds, 
+sliding interval - The interval at which the window operation is performed- 10 seconds
+
+from pyspark.sql.functions import *
+
+# Create DataFrame representing the stream of input lines from connection to localhost:9999
+spark = SparkSession.builder.appName(getClass.getSimpleName).getOrCreate()
+
+lines = spark.readStream.format("socket").option("host", "192.168.56.70").option("port", 9999).option("includeTimestamp", True).load()
+print(lines.printSchema)
+
+
+
+# Split the lines into words
+
+words = lines.select(
+   explode(
+       split(lines.value, " ")
+   ).alias("word"),lines.timestamp.alias("time")
+)
+
+wordCounts = words.groupBy(window(words.time, "30 seconds", "10 seconds"),words.word).count()
+wordCounts.writeStream.outputMode("update").format("console").start()
+
+ 
+
+
+spark-submit --master spark://localhost:7077 --deploy-mode client /home/vagrant/structured_wordcount.py 
+
+
+

@@ -1,0 +1,42 @@
+Serialization:
+	It is a process of converting data into a format that can be easily stored or transmitted and then resconstructed later.
+	ex: converting complex data structure(python objects) into a format that can be saved to a file, sent over a network, or otherwise peristed.
+	1. Purpose:
+		Storage: Save data to a file or  database
+		Transmission: data over a network or between processes.
+		Persistence: Maintain state between program executions
+	2. Common Formats:
+		Binary Formats: 
+			Efficient for storage and speed. Eamples include "pickle" and "MessagePack".
+		Text Formats: 
+			Human-readable and often used for interoperability. Example: JSON, XML and YAML
+		Columnar Formats:
+			Optimized for analytics and storage efficiency. Example: "Parquet" and "Avro"
+			
+	Always consider below:
+		1. Compatibility: Ensure the serialization format is compatible with the systems or language that will read the data.
+		2. Security: Be cautious with deserialization, especially with untrusted sources, as it can lead to security vulnerabilities.
+		3. Performance: Choose a format based on performance needs, especially for large datasets(e.g., use binary formats for speed and efficiency.
+	
+Deserialization:
+	It is a process of converting serialized data back into its original data structure or object.
+	1. Purpose:
+		Reconstruction: Rebuild the original data structure or object from a serialized format.
+		Interchange: Convert data received froma an external source into a usable form within your application.
+	2. Common Senarios:
+		Reading from files: Load data stored in files(e.g., JSON, XML, or binary formats) back into objects.
+		Receiving data: Convert the received data from network communications or APIs into usable objects.
+		Resorting State: Restore the state of an application or object that was saved previously
+	
+	Always consider below:
+		1. Data Integrity: Ensure that the deserialized data matches the expected format and structure. Invalid or corrupted data can lead to errors.
+		2. Security: Be Cautious with deserialization of the data from untrusted sources. Vulnerabilities can arise if malicious data is deserialized. 
+					 For example, avoid deserializing data with "pickle" from untrusted sources.
+		3. Error Handling: Implement proper error handling to manage issues, like format mismatches, missing data, or corrupted files.
+		
+	Example python libraries for above both:
+		1. pickle, python's built in module for serializing and deserializing python objects.
+		2. json, used for serializing and deserializing JSON data.
+		3. yaml, used for serializing and deserializing YAML data(requires pyyaml library)
+		
+	

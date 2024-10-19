@@ -1,0 +1,139 @@
+Encoding:
+	Encoding refers to converting data(often text) into a specific format for efficient storage, transmission or processing.
+	In general terms, encoding maps the characters(or other data types) to their corresponding binary representation(bytes), which computer can understand and store
+	
+	why?
+	1. Storage: Computer stores everything in binary, and encoding ensures text or any data type can be properly stored as a byte sequence
+	2. Data Transfer: When data is transferred over network, it is often encoded in the form which is most suitable for transmission.
+	3. Compatibility: Different system,  languages,  and platforms may use different encoding schemes, so choosing the right encoding ensures interoperability
+	
+	Categories of encoding
+	1. Character encoding:
+		character encoding converts characters into a numeric form. It maps the characters from the character set(like Unicode) to a set of number and eventually into a binary for storage.
+		common types:
+		1. ASCII(American Standard Code for Information Interchange):
+			7-bit encoding, representing 2^7 =128 characters, including English	 letters, digits, and some control characters.
+		2. UTF-8 (Unicode Transformation Format - 8 bits):
+			Most commonly used encoding for Unicode.  It uses 1 to 4 bytes to represent characters..
+			Efficient for representing English (ASCII characters use 1 byte) and can represent any character in Unicode.
+		3. UTF-16: 
+			Uses 2 or 4 bytes per character. More efficient for non-ASCII characters like Chinese, Japanese, and Korean scripts.
+		4. ISO-8859-1 (Latin-1): 
+			8 bit encoding representing western European languages.
+			
+	2. Binary encoding(encoding binary data):
+		Binary encoding converts data into binary format. This category includes encoding formats for data serialization and low-level communications.
+		common types:
+		1. Base64:
+			Encodes binary data into ASCII format using 64 different characters. Commonly used in email (MIME) and data URLs in web development.
+		2. Base32 and Base16:
+			Similar to Base64 but use fewer characters. Base32 uses 32 characters, and Base16 (also known as hexadecimal) uses 16 characters.
+	
+	3. URL Encoding:
+		URL encoding (percent encoding) converts characters into a format that can be transmitted over the internet. Characters that are not allowed in a URL are replaced with a % followed by their ASCII hexadecimal equivalent.
+		
+	4. HTML Encoding:
+		HTML encoding is used to represent characters that have special meanings in HTML (like < and >). It replaces them with entity codes like &lt; and &gt;.
+		
+	5. MIME Encoding"
+		MIME (Multipurpose Internet Mail Extensions) encoding is used to encode non-text files (like images or attachments) into text for email transmission.
+		
+	When to Use Different Encodings?
+		UTF-8: Default for web pages, files, and most APIs because it supports all Unicode characters and is backward-compatible with ASCII.
+		UTF-16: Efficient for documents heavily using non-Latin scripts, though less common.
+		ASCII: Use when you are only dealing with plain English text.
+		Base64: Used when binary data needs to be included in text formats, such as when embedding images in emails or web pages.
+		URL Encoding: Use when you need to pass special characters or spaces in URLs.
+		
+
+encoding often happens at a more fundamental level than serializing, and encoding may still be necessary after serialization, depending on the situation.
+Here’s how the process can work in layers:
+	Serialization: Converts a complex data structure (like a Python dictionary, object, etc.) into a string or byte representation, such as JSON, XML, or a binary format like Pickle.
+	Encoding: If the serialized data is in string form, encoding may be used to further convert the serialized string into a specific byte format (like UTF-8) to make it suitable for transmission or storage.
+
+More on Binary Encoding:
+	Binary Data: In the case of binary data (such as images, audio files, or serialized objects), the data is stored directly as bytes. However, those bytes still follow a specific format or encoding scheme that allows the machine to interpret the data correctly.
+	
+	Binary encoding refers to the process of converting data into a binary format (a sequence of 0s and 1s) for efficient storage, transmission, or processing. This binary format is essential for low-level data handling and serialization because computers operate natively with binary data. 
+	
+	Binary encoding transforms data (which could be text, images, objects, etc.) into a binary representation. This is crucial because all digital data is ultimately represented in binary form within computers. Binary encoding is used in various contexts:
+		1. Data Serialization(Pickle (Python)): Converting complex data structures or objects into a binary format for storage or transmission.
+		2. Low-Level Communications: Encoding data for protocols or systems that require binary formats for efficiency or compatibility." 
+		3. Binary Formats:
+			Binary File Formats: These include formats like executable files, compiled code, or raw data files. These formats are designed to be read and processed directly by computers.
+			Bitwise Operations: Manipulating data at the bit level for tasks like compression, encryption, or protocol implementation.
+			
+Example:
+Base64 Encoding: Converts binary data into a text format for safe transmission.
+URL Encoding: Encodes special characters in URLs to ensure safe transmission.
+JSON Encoding: Converts Python objects into JSON format for data interchange.
+HTML Encoding: Converts special characters into HTML entities for web display.
+Binary Encoding: Converts text or data into binary format.
+Hexadecimal Encoding: Represents binary data as hexadecimal numbers.
+XML Encoding: Converts data into XML format for structured data interchange.
+	
+==============	
+Example: Combining Pickle (Serialization) and Base64 (Encoding)
+You might serialize a Python object using Pickle (which serializes into bytes) and then encode it with Base64 to safely transmit it as text.
+
+```
+import pickle
+import base64
+
+# Step 1: Serialization (using Pickle)
+data = {"name": "John", "age": 30}
+serialized_data = pickle.dumps(data)  # Pickle converts the dictionary into bytes
+
+# Step 2: Encoding (using Base64)
+encoded_data = base64.b64encode(serialized_data)  # Encodes binary data into ASCII-safe text
+print(encoded_data)  # b'gAN9cQAoWAMAAABuYW1lcQFYBAAAA...' (Base64 encoded string)
+
+# Decoding and Deserialization
+decoded_data = base64.b64decode(encoded_data)  # Decode the Base64 string back to bytes
+original_data = pickle.loads(decoded_data)  # Deserialize back to original object
+print(original_data)  # {'name': 'John', 'age': 30}
+```
+==============
+	
+
+When to Use Base64 Encoding:
+Text-Based Formats: If you need to include binary data within a text-based format like JSON or XML, Base64 encoding is necessary to convert the binary data to a text representation.
+
+Embedding in HTML/CSS: When embedding images directly into HTML or CSS files.
+
+Email Attachments: When sending binary data as part of email messages where the protocol expects text.
+
+But is we are using image directly to send over internet like https then the encoded image format is enough like(jpg, jpeg, png)
+
+Direct Binary Upload: No Base64 encoding is needed if you’re sending the image file directly as binary data in protocols that support this (e.g., multipart form data in HTTP).
+Base64 Encoding: Use Base64 when you need to include binary data within text-based formats or systems that only handle text.
+
+
+=====
+
+Decoding:
+	Decoding is the process of converting encoded data back into its original format or a format that can be understood by a system. It is the reverse operation of encoding, which involves transforming data into a different format for various purposes such as transmission, storage, or encryption.
+	Key Points About Decoding
+		Purpose of Decoding:
+		Restoration: To retrieve the original data from an encoded or transformed state.
+		Interpretation: To make encoded data readable or usable by the recipient or system.
+		Common Scenarios:
+		Data Transmission: Converting encoded data (like Base64 or URL encoding) back to its original binary or text format for processing.
+		Data Storage: Reverting data from a compressed or encoded format to its original state for usage.
+		Encryption/Decryption: Decoding encrypted data to obtain the original plaintext.
+		
+Examples of Decoding
+Base64 Decoding:
+	Encoded Data: Base64 encoding converts binary data to a text format.
+	Decoding: Base64 decoding converts the encoded text back to the original binary data
+URL Decoding:
+	Encoded Data: URL encoding replaces unsafe characters with % followed by their ASCII code in hexadecimal.
+	Decoding: URL decoding converts these encoded characters back to their original form.
+JSON Decoding:
+	Encoded Data: JSON encoding converts data structures into JSON format.
+	Decoding: JSON decoding parses the JSON data back into Python objects
+Image Decoding:
+	Encoded Data: An image file may be encoded in a specific format (e.g., JPEG, PNG).
+	Decoding: The image data is decoded by an image processing library to render or display the image.
+	
+===================================
