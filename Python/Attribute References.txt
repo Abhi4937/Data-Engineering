@@ -1,0 +1,79 @@
+Attribute References:
+	Attribute references in Python are a way to access or modify attributes (properties or methods) of an object. They follow a specific syntax and are fundamental to object-oriented programming in Python.
+
+Attribute Reference Syntax
+	The basic syntax for an attribute reference is:
+	'''
+	attributeref ::=  primary "." identifier
+	'''
+python Copy code
+	primary_expression.attribute_name
+Where:
+1. primary_expression is an expression that evaluates to an object (like an instance of a class).
+2. attribute_name is the name of the attribute you want to access or modify.
+
+Detailed Explanation
+Primary Expression:
+	This is an object or a result of an expression that is expected to have attributes. It could be an instance of a class, a module, or even built-in objects like lists and dictionaries.
+Attribute Name:
+	This is a string representing the name of the attribute you want to access or modify. It must be a valid identifier.
+	
+How It Works
+Lookup Order:
+1. Instance’s __dict__: Python first looks for the attribute in the instance's __dict__, which stores attributes specific to that instance.
+2. Class’s __dict__: If not found, Python checks the class's __dict__, which contains attributes shared across all instances of the class.
+3. Base Classes: If still not found, Python looks in the base classes, following the method resolution order (MRO).
+
+Points:
+1. The primary must evaluate to an object of a type that supports attribute references, which most objects do. 
+2. This object is then asked to produce the attribute whose name is the identifier. 
+3. The type and value produced is determined by the object. 
+4. Multiple evaluations of the same attribute reference may yield different objects.
+5. This production can be customized by overriding the __getattribute__() method or the __getattr__() method. 
+		The __getattribute__() method is called first and either returns a value or raises AttributeError if the attribute is not available.
+		If an AttributeError is raised and the object has a __getattr__() method, that method is called as a fallback.
+
+	In Python, the statement "multiple evaluations of the same attribute reference may yield different objects" means that the result of accessing an attribute of an object might not always be the same object every time you access it. This behavior can occur if the attribute access involves a function or property that computes or generates a new value each time it is accessed.
+	
+
+EXAMPLE:
+'''
+class MyClass:
+  classVariable="This is class variable"
+  def __init__(self,value):
+    self.instanceVariable=value
+  def __getattribute__(self,name):
+    print("This is __getattribute__")
+    return super().__getattribute__(name)
+  def __getattr__(self,name):
+    print("This is __getattr__")
+
+my_object = MyClass(42)
+print(my_object.instanceVariable)
+print(my_object.classVariable)
+print(my_object.__dict__)
+print(my_object.__class__.__dict__)
+print(MyClass.__dict__)
+'''
+
+'''
+class MyClass:
+  classVariable="This is class variable"
+  def __init__(self,value):
+    self.instanceVariable=value
+  def __getattribute__(self,name):
+    print("This is __getattribute__")
+    return super().__getattribute__(name)
+  def __getattr__(self,name):
+    print("This is __getattr__ as the variable is not found using __getattribute__")
+    return 1 #if no return is present it will return none as no data is returned.
+
+my_object = MyClass(42)
+print(my_object.instanceVariable2)
+print(my_object.classVariable)
+print(my_object.__dict__)
+print(my_object.__class__.__dict__)
+print(MyClass.__dict__)
+'''
+
+If we don't overrride the __getattribute__ then it will internally implement __getattribute__ and will use super().__getattribute__(name)

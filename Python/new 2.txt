@@ -1,0 +1,60 @@
+Slicing:
+	1. A slicing selects a range of items in a sequence object (e.g., a string, tuple or list). 
+	2. Slicings may be used as expressions or as targets in assignment or del statements. The syntax for a slicing:
+	
+'''
+slicing      ::=  primary "[" slice_list "]"
+slice_list   ::=  slice_item ("," slice_item)* [","]
+slice_item   ::=  expression | proper_slice
+proper_slice ::=  [lower_bound] ":" [upper_bound] [ ":" [stride] ]
+lower_bound  ::=  expression
+upper_bound  ::=  expression
+stride       ::=  expression
+'''
+
+Using Slicing as Targets in Assignment:
+	You can use slicing as a target for assignment, allowing you to replace or update a range of elements in a mutable sequence like a list.
+	Example:
+	'''
+	my_list = [0, 1, 2, 3, 4, 5]
+	my_list[1:4] = ['a', 'b', 'c']  # Replaces elements from index 1 to 3
+	print(my_list)  # Output: [0, 'a', 'b', 'c', 4, 5]
+	'''
+
+Using Slicing in del Statements:
+	You can also use slicing as a target for deletion with the del statement, which removes the specified range of elements from the sequence.
+	Example:
+	'''
+	my_list = [0, 1, 2, 3, 4, 5, 6]
+	del my_list[2:5]  # Deletes elements at indices 2, 3, and 4
+	print(my_list)    # Output: [0, 1, 5, 6]
+	'''
+
+	sequence[start:stop:step]
+	Where:
+	start: The index at which the slice starts (inclusive).
+	stop: The index at which the slice ends (exclusive).
+	step: The interval between indices (optional).
+	Detailed Explanation of Each Part:
+		start (optional): The starting index of the slice. If omitted, it defaults to the beginning of the sequence (index 0).
+			Example: my_list[:5] will start from the beginning and go up to index 4 (the stop value).
+		stop (required): The stopping index of the slice. It is exclusive, meaning the slice will not include the element at the stop index.
+			Example: my_list[1:5] will include elements at index 1 through 4, but not index 5.
+		step (optional): The step or stride for the slice. If omitted, the default step is 1, which means it will select every element between start and stop. A negative step will reverse the direction of slicing.
+			Example: my_list[::2] will select every second element.
+			Example (negative step): my_list[::-1] will return the list in reverse order.
+	
+
+1. There is ambiguity in the formal syntax here: anything that looks like an expression list also looks like a slice list, so any subscription can be interpreted as a slicing. Rather than further complicating the syntax, this is disambiguated by defining that in this case the interpretation as a subscription takes priority over the interpretation as a slicing (this is the case if the slice list contains no proper slice).
+2. The semantics for a slicing are as follows. The primary is indexed (using the same __getitem__() method as normal subscription) with a key that is constructed from the slice list, as follows. If the slice list contains at least one comma, the key is a tuple containing the conversion of the slice items; otherwise, the conversion of the lone slice item is the key. The conversion of a slice item that is an expression is that expression. The conversion of a proper slice is a slice object (see section The standard type hierarchy) whose start, stop and step attributes are the values of the expressions given as lower bound, upper bound and stride, respectively, substituting None for missing expressions.
+
+slice(start, stop, stride) --> object is created if slice is present and that is passed as the key to __getitem__()
+
+example:
+'''
+list=[1,2,3,4,5]
+print(list.__getitem__(slice(1,2,1)))
+'''
+
+
+

@@ -1,0 +1,13 @@
+Primaries:
+	Primaries represent the most tightly bound operations of the language. Their syntax is
+'''
+primary ::=  atom | attributeref | subscription | slicing | call
+'''
+
+Atom
+	Atoms are the most basic elements of expressions. The simplest atoms are identifiers or literals. Forms enclosed in parentheses, brackets or braces are also categorized syntactically as atoms. The syntax for atoms is:
+'''
+atom      ::=  identifier | literal | enclosure
+enclosure ::=  parenth_form | list_display | dict_display | set_display
+               | generator_expression | yield_atom
+'''

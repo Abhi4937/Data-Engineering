@@ -1,0 +1,44 @@
+Expressions:
+	In python, expression is any valid combination of values, variables, operators and functions that python interprets and evaluates to produce the result.
+	Expressions are building block in python code and are used to perform calculations, evaluate conditions, or produce new values.
+
+======================
+Arithmetic Conversion:
+	It refers to how python automatically handles and converts different numeric types during arithmetic operations to ensure that the result is of appropriate type and maintain precision.
+		1. If either argument is a complex number, the other is converted to complex;
+		2. otherwise, if either argument is a floating-point number, the other is converted to floating point;
+		3. otherwise, both must be integers and no conversion is necessary.
+		
+1. Arithmetic Conversion: Python automatically converts numeric types during operations to ensure appropriate results and precision.
+2. Type Promotion: Operands are promoted to a higher precision type (e.g., int to float, float to complex).
+3. Operations: Different arithmetic operations handle type conversion based on the operands involved, ensuring correct results.
+
+Some additional rules apply for certain operators (e.g., a string as a left argument to the ‘%’ operator). Extensions must define their own conversion behavior:
+	1. % Operator for Strings: When used with strings, the % operator is for formatting. The left operand must be a string containing format specifiers, and the right operand is a tuple of values to be inserted into the string.
+	2. Custom Operators: Extensions or custom classes can define their own behavior for operators (e.g., __mod__ for %), allowing for custom logic and conversions.
+	
+Examples:
+'''
+class CustomFormatter:
+    def __init__(self, value):
+        self.value = value
+
+    def __mod__(self, format_spec):
+        return f"Formatted Value: {format_spec % self.value}"
+
+# Create an instance of CustomFormatter
+cf = CustomFormatter(123)
+
+# Use the '%' operator to format the value
+formatted = cf % "%.2f"
+print(formatted)  # Output: Formatted Value: 123.00
+'''
+======================
+
+Atoms:
+	Atoms are the most basic elements of expressions. The simplest atoms are identifiers or literals. Forms enclosed in parentheses, brackets or braces are also categorized syntactically as atoms. The syntax for atoms is:
+'''
+atom      ::=  identifier | literal | enclosure
+enclosure ::=  parenth_form | list_display | dict_display | set_display
+               | generator_expression | yield_atom
+'''

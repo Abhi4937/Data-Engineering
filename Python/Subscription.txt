@@ -1,0 +1,75 @@
+Subscription:
+	subscription refers to accessing elements of a container (like lists, dictionaries, or tuples) using square brackets []. This is typically how you retrieve specific elements from a collection. However, when using generic classes, the behavior of subscription changes to return a GenericAlias object instead of selecting an element.
+	Subscription in Generic Classes	
+		A generic class in Python allows you to define classes that can operate on types specified at runtime, often using type hints from the typing module. When you use subscription on a generic class, instead of retrieving a specific item, you are specifying the type parameters for that generic class, and the result is a GenericAlias object.
+		
+The subscription of an instance of a container class will generally select an element from the container. The subscription of a generic class will generally return a GenericAlias object.
+'''
+subscription ::=  primary "[" expression_list "]"
+'''
+1. When an object is subscripted, the interpreter will evaluate the primary and the expression list.
+2. The primary must evaluate to an object that supports subscription. 
+3. An object may support subscription through defining one or both of __getitem__() and __class_getitem__().
+4. When the primary is subscripted, the evaluated result of the expression list will be passed to one of these methods. 
+5. If the expression list contains at least one comma, it will evaluate to a tuple containing the items of the expression list. 
+6. Otherwise, the expression list will evaluate to the value of the list’s sole member.
+7. For built-in objects, there are two types of objects that support subscription via __getitem__():
+	1. Mappings. If the primary is a mapping, the expression list must evaluate to an object whose value is one of the keys of the mapping, and the subscription selects the value in the mapping that corresponds to that key. An example of a builtin mapping class is the dict class.
+	2. Sequences. If the primary is a sequence, the expression list must evaluate to an int or a slice (as discussed in the following section). Examples of builtin sequence classes include the str, list and tuple classes.
+8. The formal syntax makes no special provision for negative indices in sequences. 
+9. However, built-in sequences all provide a __getitem__() method that interprets negative indices by adding the length of the sequence to the index so that, for example, x[-1] selects the last item of x. 
+10. The resulting value must be a nonnegative integer less than the number of items in the sequence, and the subscription selects the item whose index is that value (counting from zero). 
+11. Since the support for negative indices and slicing occurs in the object’s __getitem__() method, subclasses overriding this method will need to explicitly add that support.
+12. A string is a special kind of sequence whose items are characters. A character is not a separate data type but a string of exactly one character.
+
+
+
+methods:
+	__getitem__(self, key):
+		This method is called when you use subscription syntax to retrieve an item from a container.
+		For example, my_list[2] will call my_list.__getitem__(2).
+		It allows you to define how elements are accessed. If you have a custom class, you can define this method to specify how to retrieve items based on a key or index
+	__class_getitem__(cls, key):
+		This method is used for handling generic types, introduced with Python 3.7 to support type hints and generics.
+		It allows you to define how types are parameterized. It is called when you use subscription syntax to access generic types (e.g., List[int]).
+		It's more relevant for class-level access to generic types rather than instance-level data retrieval.
+
+
+EXAMPLE:
+	'''
+	list=[1,2,3,4,5,6,7]
+	print(list[2])
+	print(list.__getitem__(2))
+	print(list[1:2])
+	print(list[-7])
+	print(list.__getitem__(len(list)-7))
+	print(list.__getitem__(list.__len__()-7))
+	print(list[1:7:2])
+	'''
+	
+	'''
+	class MyClass2:
+	  def __init__(self, item):
+		self.item=item
+	  def __getitem__(self, key):
+		print("we are inside teh __getitem__()")
+		return self.item[key]
+	my_class2=MyClass2([1,2,3,4,5,6])
+	print(my_class2[1*2:6:2])
+	print(my_class2[-1])
+	'''
+	
+	'''
+	string="This is a string"
+	print(string[2])
+	print(string.__getitem__(2))
+	'''
+	
+	'''
+	import numpy as np
+	data = np.array([[1, 2], [3, 4]])
+	indices = (1, 1)
+	result = data[indices]  # Evaluates to data[1][1]
+	print(result) 
+	'''
+	

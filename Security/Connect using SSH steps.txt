@@ -1,0 +1,25 @@
+			Connect using ssh(steps)
+step 0: check if alrady key exists 
+	ls -al ~/.ssh
+Below i already have rsa key generated
+ 
+Will generate new ssh key of ed25519 type for my Github
+
+step 1: Create key using below command
+	ssh-keygen -t ed25519 -C "singhabhishek4937@gmail.com"
+ 
+Note:
+	-t: type of key(here, ed25519(256 bits)
+	-C: to add comments like email
+	We have not added paraphrase
+step 2:  copy the id_ed25519.pub key and add it to Github ssh and gpg keys
+ 
+Log in to GitHub and go to Settings:
+Click on your profile picture (top-right) ? Settings.
+On the left-hand side, click on SSH and GPG keys.
+Click the New SSH key button.
+	In the Title field, give the key a name (e.g., “My Git Bash SSH Key”).
+Paste the public key into the "Key" field and click Add SSH key.
+
+step 3: We can use ssh agent or 
+a
