@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "This the current executing script name: $0"
