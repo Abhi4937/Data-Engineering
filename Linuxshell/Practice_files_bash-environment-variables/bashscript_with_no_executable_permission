@@ -1,0 +1,4 @@
+echo "This the executing script without any executable permission $(dirname $0)"
+echo "Also this script doesn't require shebang"
+echo "It creates new subshell to execute proof: scipt:$0 pointing to current executing script and not -bash"
+ls -l $0

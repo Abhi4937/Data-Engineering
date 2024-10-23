@@ -1,0 +1,7 @@
+#!/bin/bash
+string1=""
+string2="This is non empty string"
+if [ -z "${string1}" ]; then 
+	echo "It runs 'thisscrpt' which is evalutated as string1 is empty using -z"
+	. "$(dirname "$0")"/thisscript
+fi

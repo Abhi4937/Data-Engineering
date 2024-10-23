@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "arguments to the script using '@' is: $@"
+echo "arguments to the script using '*' is: $*"

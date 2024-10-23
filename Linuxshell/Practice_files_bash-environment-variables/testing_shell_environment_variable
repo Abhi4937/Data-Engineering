@@ -1,0 +1,4 @@
+echo "This is shell variable: $shell_var"
+echo "This is environment variable: $env_var"
+env_var="I'm a updated enviornment variable"
+echo "This is updated environment variable: $env_var"
