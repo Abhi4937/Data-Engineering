@@ -1,0 +1,28 @@
+		Securing the root user
+
+
+AWS Root Account Security - Lecture Notes
+
+Introduction to IAM (Identity Access Management):
+IAM manages users, groups, and roles to control access to AWS resources.
+Essential for both AWS certification exams and real-life AWS administration.
+
+Understanding the Root Account:
+Root account: The email used to sign up for AWS.
+Full administrative access to all AWS services.
+Crucial to secure the root account to prevent unauthorized access.
+
+Securing the Root Account:
+Enable Multi-Factor Authentication (MFA) to add an extra layer of security.
+Tools like Google Authenticator or Authy can be used for MFA.
+Authy is recommended for backing up two-factor authentication across multiple devices.
+
+Steps to Assign MFA:
+Sign in to AWS console ? Go to IAM in the Security section.
+Follow the steps to assign MFA by scanning a QR code with an authenticator app.
+MFA generates two codes to be entered to complete setup.
+
+Exam Tips:
+Always enable MFA for the root account.
+Create an administrator group and assign permissions to users.
+Learn how to assign permissions to groups, users, and roles.

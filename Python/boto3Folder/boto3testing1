@@ -1,0 +1,3 @@
+#!/usr/bin/python3
+import boto3
+print(boto3.__version__)
